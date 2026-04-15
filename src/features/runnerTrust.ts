@@ -41,6 +41,9 @@ class RunnerTrustModal extends Modal {
 
     body.createEl("strong", { text: "Interpreter:" });
     body.createEl("code", { text: this.interpreter.join(" ") });
+    body.createEl("p", {
+      text: "Trust applies only to this file path for the rest of the current plugin session.",
+    });
 
     const buttons = contentEl.createDiv({ cls: "scriptvault-trust-modal-buttons" });
 
@@ -57,7 +60,7 @@ class RunnerTrustModal extends Modal {
     });
 
     const trustBtn = buttons.createEl("button", {
-      text: "Run and trust this session",
+      text: "Run and trust this file this session",
       cls: "mod-cta",
     });
     trustBtn.addEventListener("click", () => {
@@ -81,14 +84,14 @@ export async function requireTrust(
   interpreter: string[],
 ): Promise<boolean> {
   if (!plugin.settings.runnerConfirmEverySession) return true;
-  if (plugin.runnerSessionTrusted) return true;
+  if (plugin.trustedRunPaths.has(scriptPath)) return true;
 
   const modal = new RunnerTrustModal(plugin.app, scriptPath, interpreter);
   modal.open();
   const choice = await modal.waitForChoice();
 
   if (choice.allow && choice.rememberSession) {
-    plugin.runnerSessionTrusted = true;
+    plugin.trustedRunPaths.add(scriptPath);
   }
 
   return choice.allow;

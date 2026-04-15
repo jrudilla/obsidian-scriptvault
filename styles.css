@@ -1,3 +1,60 @@
+/* ── Syntax token colors (via classHighlighter → .tok-* classes) ─────── */
+/* Dark theme defaults; override with .theme-light below if needed */
+.scriptvault-editor .tok-keyword            { color: #cf8e6d; }
+.scriptvault-editor .tok-controlKeyword     { color: #cf8e6d; }
+.scriptvault-editor .tok-definitionKeyword  { color: #cf8e6d; }
+.scriptvault-editor .tok-string             { color: #6aab73; }
+.scriptvault-editor .tok-string2            { color: #6aab73; }
+.scriptvault-editor .tok-comment            { color: #7a7e85; font-style: italic; }
+.scriptvault-editor .tok-lineComment        { color: #7a7e85; font-style: italic; }
+.scriptvault-editor .tok-blockComment       { color: #7a7e85; font-style: italic; }
+.scriptvault-editor .tok-number             { color: #5191a6; }
+.scriptvault-editor .tok-bool               { color: #5191a6; }
+.scriptvault-editor .tok-null               { color: #5191a6; }
+.scriptvault-editor .tok-atom               { color: #d16969; }
+.scriptvault-editor .tok-variableName       { color: #9cdcfe; }
+.scriptvault-editor .tok-variableName2      { color: #9cdcfe; }
+.scriptvault-editor .tok-local             { color: #9cdcfe; }
+.scriptvault-editor .tok-definition         { color: #dcdcaa; }
+.scriptvault-editor .tok-typeName           { color: #4ec9b0; }
+.scriptvault-editor .tok-namespace          { color: #4ec9b0; }
+.scriptvault-editor .tok-propertyName       { color: #c8c8c8; }
+.scriptvault-editor .tok-operator           { color: #c8c8c8; }
+.scriptvault-editor .tok-punctuation        { color: #c8c8c8; }
+.scriptvault-editor .tok-bracket            { color: #c8c8c8; }
+.scriptvault-editor .tok-tagName            { color: #e9c46a; }
+.scriptvault-editor .tok-attributeName      { color: #9cdcfe; }
+.scriptvault-editor .tok-attributeValue     { color: #6aab73; }
+.scriptvault-editor .tok-link               { color: #6aab73; text-decoration: underline; }
+.scriptvault-editor .tok-invalid            { color: #f44747; text-decoration: underline; }
+
+/* Light theme adjustments */
+.theme-light .scriptvault-editor .tok-keyword            { color: #0000ff; }
+.theme-light .scriptvault-editor .tok-controlKeyword     { color: #af00db; }
+.theme-light .scriptvault-editor .tok-definitionKeyword  { color: #0000ff; }
+.theme-light .scriptvault-editor .tok-string             { color: #a31515; }
+.theme-light .scriptvault-editor .tok-string2            { color: #a31515; }
+.theme-light .scriptvault-editor .tok-comment            { color: #008000; }
+.theme-light .scriptvault-editor .tok-lineComment        { color: #008000; }
+.theme-light .scriptvault-editor .tok-blockComment       { color: #008000; }
+.theme-light .scriptvault-editor .tok-number             { color: #09885a; }
+.theme-light .scriptvault-editor .tok-bool               { color: #0000ff; }
+.theme-light .scriptvault-editor .tok-atom               { color: #0070c1; }
+.theme-light .scriptvault-editor .tok-variableName       { color: #001080; }
+.theme-light .scriptvault-editor .tok-variableName2      { color: #001080; }
+.theme-light .scriptvault-editor .tok-definition         { color: #795e26; }
+.theme-light .scriptvault-editor .tok-typeName           { color: #267f99; }
+.theme-light .scriptvault-editor .tok-propertyName       { color: #001080; }
+.theme-light .scriptvault-editor .tok-tagName            { color: #800000; }
+.theme-light .scriptvault-editor .tok-attributeName      { color: #e50000; }
+.theme-light .scriptvault-editor .tok-attributeValue     { color: #0000ff; }
+
+/* ─────────────────────────────────────────────────────────────────────── */
+
+.scriptvault-hidden {
+  display: none !important;
+}
+
 .scriptvault-view {
   display: flex;
   flex-direction: column;
@@ -16,6 +73,14 @@
 .scriptvault-header button {
   font-size: 12px;
   padding: 4px 10px;
+}
+
+.scriptvault-header-cursor {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-monospace);
+  white-space: nowrap;
+  margin-left: 4px;
 }
 
 .scriptvault-header-spacer {
@@ -174,4 +239,81 @@
   gap: 8px;
   justify-content: flex-end;
   margin-top: 16px;
+}
+
+/* ── New Script Modal ───────────────────────────────────────────────────── */
+
+.scriptvault-new-folder-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: -8px 0 12px;
+  font-family: var(--font-monospace);
+}
+
+.scriptvault-new-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.scriptvault-new-row label,
+.scriptvault-new-types label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.scriptvault-new-row input[type="text"] {
+  width: 100%;
+  font-family: var(--font-monospace);
+  font-size: 14px;
+}
+
+.scriptvault-new-types {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.scriptvault-new-type-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scriptvault-type-btn {
+  font-family: var(--font-monospace);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-normal);
+}
+
+.scriptvault-type-btn.is-active {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border-color: var(--interactive-accent);
+}
+
+.scriptvault-new-preview {
+  font-size: 12px;
+  font-family: var(--font-monospace);
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  padding: 6px 8px;
+  background: var(--background-secondary);
+  border-radius: 4px;
+}
+
+.scriptvault-new-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
 }

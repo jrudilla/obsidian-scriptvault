@@ -24,3 +24,11 @@ export const FILENAME_ONLY = [
 ];
 
 export const RUNNABLE_EXTENSIONS = new Set(["sh", "bash", "zsh", "fish", "ps1"]);
+
+// Extensions where chmod +x makes sense (Unix shells, excludes ps1 and Windows-only)
+export const UNIX_CHMOD_EXTENSIONS = new Set(["sh", "bash", "zsh", "fish"]);
+
+// Extensions ShellCheck can analyze. ShellCheck officially supports only
+// sh/bash/dash/ksh/busybox — NOT fish or zsh (running it on those yields
+// bogus diagnostics because it falls back to POSIX sh rules).
+export const SHELLCHECK_EXTENSIONS = new Set(["sh", "bash", "dash", "ksh"]);

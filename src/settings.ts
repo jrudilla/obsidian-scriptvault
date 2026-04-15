@@ -7,6 +7,8 @@ export interface ScriptVaultSettings {
   runnerTimeoutMs: number;
   runnerConfirmEverySession: boolean;
   enableFilenameIntercept: boolean;
+  enableShellCheck: boolean;
+  shellCheckPath: string; // empty = auto-detect from known locations
 }
 
 export const DEFAULT_SETTINGS: ScriptVaultSettings = {
@@ -15,6 +17,8 @@ export const DEFAULT_SETTINGS: ScriptVaultSettings = {
   runnerTimeoutMs: 30000,
   runnerConfirmEverySession: true,
   enableFilenameIntercept: true,
+  enableShellCheck: true,
+  shellCheckPath: "",
 };
 
 export class ScriptVaultSettingsTab extends PluginSettingTab {
@@ -28,6 +32,33 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
+
+    new Setting(containerEl)
+      .setName("Enable ShellCheck linting")
+      .setDesc(
+        "Show inline ShellCheck diagnostics for shell scripts (.sh, .bash). Requires ShellCheck installed (brew install shellcheck). Desktop only.",
+      )
+      .addToggle((t) =>
+        t.setValue(this.plugin.settings.enableShellCheck).onChange(async (v) => {
+          this.plugin.settings.enableShellCheck = v;
+          await this.plugin.saveSettings();
+        }),
+      );
+
+    new Setting(containerEl)
+      .setName("ShellCheck path")
+      .setDesc(
+        "Absolute path to the shellcheck binary. Leave empty to auto-detect (/opt/homebrew/bin, /usr/local/bin, /usr/bin).",
+      )
+      .addText((t) =>
+        t
+          .setPlaceholder("/opt/homebrew/bin/shellcheck")
+          .setValue(this.plugin.settings.shellCheckPath)
+          .onChange(async (v) => {
+            this.plugin.settings.shellCheckPath = v.trim();
+            await this.plugin.saveSettings();
+          }),
+      );
 
     new Setting(containerEl)
       .setName("Mask .env values by default")
@@ -56,7 +87,7 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("Confirm script execution per session")
       .setDesc(
-        "Show a confirmation modal the first time you run a script in each session. After the first confirmation, subsequent runs in the same session execute without prompting until you reload the plugin.",
+        "Show a confirmation modal the first time you run each script in a session. After confirmation, that same file can run again without prompting until you reload the plugin.",
       )
       .addToggle((t) =>
         t

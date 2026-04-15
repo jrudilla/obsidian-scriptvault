@@ -1,5 +1,8 @@
-import { Platform } from "obsidian";
-
 export function isDesktop(): boolean {
-  return Platform.isDesktopApp && !Platform.isMobile;
+  try {
+    const { Platform } = require("obsidian") as typeof import("obsidian");
+    return Platform.isDesktopApp && !Platform.isMobile;
+  } catch {
+    return false;
+  }
 }

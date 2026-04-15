@@ -1,11 +1,13 @@
 import {
   Plugin,
   TFile,
+  TFolder,
   WorkspaceLeaf,
   Notice,
   Menu,
   MenuItem,
 } from "obsidian";
+import { NewScriptModal } from "./features/newScript";
 import {
   DEFAULT_SETTINGS,
   ScriptVaultSettings,
@@ -26,7 +28,7 @@ import { debounce } from "./util/debounce";
 
 export default class ScriptVaultPlugin extends Plugin {
   settings!: ScriptVaultSettings;
-  runnerSessionTrusted = false;
+  trustedRunPaths = new Set<string>();
 
   private reentryGuard = new WeakSet<TFile>();
   private refreshOutlineDebounced!: () => void;
@@ -62,21 +64,38 @@ export default class ScriptVaultPlugin extends Plugin {
     );
 
     this.registerEvent(
-      this.app.workspace.on("file-menu", (menu: Menu, file) => {
-        if (file instanceof TFile && this.shouldOfferOpen(file)) {
+      this.app.workspace.on("file-menu", (menu: Menu, abstractFile) => {
+        // "Open in ScriptVault" for supported files
+        if (abstractFile instanceof TFile && this.shouldOfferOpen(abstractFile)) {
           menu.addItem((item: MenuItem) => {
             item
               .setTitle("Open in ScriptVault")
               .setIcon("file-code")
-              .onClick(() => this.openInScriptView(file));
+              .onClick(() => this.openInScriptView(abstractFile));
+          });
+        }
+        // "New script file…" — target the folder itself, or parent of a file
+        const folder =
+          abstractFile instanceof TFolder
+            ? abstractFile
+            : abstractFile instanceof TFile
+              ? abstractFile.parent
+              : null;
+        if (folder) {
+          menu.addItem((item: MenuItem) => {
+            item
+              .setTitle("New script file…")
+              .setIcon("file-plus")
+              .onClick(() => this.openNewScriptModal(folder));
           });
         }
       }),
     );
 
+
     this.addCommand({
       id: "open-current-in-scriptvault",
-      name: "Open current file in ScriptVault",
+      name: "Open current file",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveFile();
         if (!file) return false;
@@ -88,7 +107,7 @@ export default class ScriptVaultPlugin extends Plugin {
 
     this.addCommand({
       id: "show-outline",
-      name: "Show ScriptVault outline",
+      name: "Show outline",
       callback: () => this.openOutlineView(),
     });
 
@@ -221,6 +240,18 @@ export default class ScriptVaultPlugin extends Plugin {
         8000,
       );
     }
+  }
+
+  // --- New script modal ---
+
+  openNewScriptModal(folder: TFolder): void {
+    const modal = new NewScriptModal(this.app, folder, async (path) => {
+      const file = this.app.vault.getAbstractFileByPath(path);
+      if (file instanceof TFile) {
+        await this.openInScriptView(file);
+      }
+    });
+    modal.open();
   }
 
   // Expose for tests / future use

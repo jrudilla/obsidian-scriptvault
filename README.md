@@ -1,65 +1,172 @@
 # ScriptVault
 
-Obsidian plugin to open, view, and edit shell scripts, dotfiles, and developer config files inside your vault — with syntax highlighting, `.env` value masking, a script runner, and a function outline.
+An [Obsidian](https://obsidian.md) desktop plugin that lets you open, edit, and run shell scripts, dotfiles, and developer config files directly inside your vault, with syntax highlighting, a function outline, ShellCheck linting, and an integrated output panel.
 
-## Supported files
-
-- **Shell**: `.sh`, `.bash`, `.zsh`, `.fish`
-- **PowerShell**: `.ps1`
-- **Env / config**: `.env`, `.gitignore`, `.gitconfig`, `.npmrc`, `.editorconfig`
-- **Filename-only**: `Dockerfile`, `Makefile`
+---
 
 ## Features
 
-- **Syntax highlighting** via CodeMirror 6 (`@codemirror/legacy-modes`), themed against Obsidian's editor variables.
-- **Shebang detection** — a `.txt` file starting with `#!/usr/bin/env bash` will be highlighted as shell (when opened via ScriptVault).
-- **`.env` value masking** — values are hidden by default; toggle in the view header to reveal.
-- **Run script** (desktop only) — executes the current script with a per-session trust confirmation; output streams to a right-sidebar panel. Configurable timeout and custom interpreter.
-- **Function outline** — right-sidebar view listing shell/PowerShell functions, Makefile targets, and Dockerfile `FROM` stages. Click to jump.
+| Feature | Description |
+|---|---|
+| **Syntax highlighting** | CodeMirror 6 highlighting for Bash/Shell, Zsh, Fish, PowerShell, Dockerfile, YAML, `.env`, `.gitignore`, `.gitconfig`, `.npmrc`, `.editorconfig` |
+| **Shebang detection** | Auto-detects language from `#!/bin/bash`, `#!/usr/bin/env fish`, etc. |
+| **Filename-only files** | Opens `Dockerfile`, `Makefile`, `GNUmakefile` in the ScriptVault editor automatically |
+| **`.env` masking** | Values after `=` are hidden by default; toggle to reveal |
+| **Run scripts** | Execute the current script and stream stdout/stderr to a sidebar panel |
+| **ShellCheck linting** | Inline diagnostics via [ShellCheck](https://www.shellcheck.net/) (requires ShellCheck installed) |
+| **chmod +x** | Shows a "chmod +x" button in the header if the file is not executable yet |
+| **Function outline** | Sidebar listing functions, targets (Makefile), and FROM stages (Dockerfile) — click to jump |
+| **New script modal** | Create a new script with a template from the file explorer context menu |
+| **Copy path** | Copy the absolute file path to clipboard from the header |
+| **Line/column counter** | Live cursor position shown in the header |
 
-## Prerequisites
-
-To open filename-only files like `Dockerfile` and `Makefile`, enable **Settings → Files & Links → Detect all file extensions** in Obsidian. ScriptVault will show a one-time notice if this setting is off.
+---
 
 ## Installation
 
-### During development
+### Via BRAT (recommended for beta testing)
 
-```bash
-npm install
-npm run build
-```
+1. Install the [BRAT plugin](https://github.com/TfTHacker/obsidian42-brat).
+2. In BRAT settings, click **Add Beta Plugin** and enter:
+   ```
+   jrudilla/obsidian-scriptvault
+   ```
+3. Enable ScriptVault in **Settings → Community plugins**.
 
-Then copy `main.js`, `manifest.json`, and `styles.css` into `<vault>/.obsidian/plugins/obsidian-scriptvault/` and enable the plugin in **Settings → Community plugins**.
+### Manual installation
 
-### From the community marketplace
+1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/jrudilla/obsidian-scriptvault/releases/latest).
+2. Copy the three files into `<your-vault>/.obsidian/plugins/scriptvault/`.
+3. Reload Obsidian and enable ScriptVault in **Settings → Community plugins**.
 
-_(Pending submission to `obsidianmd/obsidian-releases`.)_
+### Obsidian marketplace
+
+Once accepted, you'll be able to install directly from **Settings → Community plugins → Browse**.
+
+---
+
+## Requirements
+
+- **Obsidian Desktop 1.4.16+**
+- **"Detect all file extensions"** must be enabled in **Settings → Files & Links** to open `Dockerfile`, `Makefile`, and other extensionless files.
+- **ShellCheck** (optional, for linting): install via your package manager:
+  ```bash
+  # macOS
+  brew install shellcheck
+
+  # Debian/Ubuntu
+  apt install shellcheck
+
+  # Arch
+  pacman -S shellcheck
+  ```
+- ScriptVault is a **desktop-only** plugin.
+
+---
+
+## Supported file types
+
+| Extension / name | Language |
+|---|---|
+| `.sh`, `.bash`, `.zsh`, `.fish` | Shell |
+| `.ps1` | PowerShell |
+| `.env` | Properties (masked values) |
+| `.gitignore`, `.gitconfig`, `.npmrc`, `.editorconfig` | Properties |
+| `Dockerfile`, `dockerfile` | Dockerfile |
+| `Makefile`, `makefile`, `GNUmakefile` | Shell (Makefile targets in outline) |
+
+---
 
 ## Settings
 
-- **Mask .env values by default** — whether `.env` files open with values hidden.
-- **Intercept filename-only files** — automatically open `Dockerfile` / `Makefile` in ScriptVault.
-- **Confirm script execution per session** — show a trust modal before the first `Run` in each session. Uncheck for zero-friction iteration.
-- **Runner shell override** — force a specific interpreter path for all scripts. Leave empty to auto-detect from shebang or extension.
-- **Runner timeout (ms)** — maximum execution time before scripts are killed.
+| Setting | Default | Description |
+|---|---|---|
+| **Enable ShellCheck linting** | On | Show inline ShellCheck diagnostics. Requires ShellCheck installed. |
+| **Mask .env values by default** | On | Hide values after `=` when opening `.env` files. |
+| **Intercept filename-only files** | On | Automatically open Dockerfile/Makefile in ScriptVault. |
+| **Confirm script execution per session** | On | Show a confirmation modal the first time you run each script per session. |
+| **Runner shell override** | _(empty)_ | Force a specific interpreter path. Leave empty for auto-detection. |
+| **Runner timeout (ms)** | 30000 | Kill the script after this many milliseconds. |
 
-## Security note
+---
 
-The **Run** feature executes arbitrary shell commands from files in your vault. Only run scripts you trust. The per-session trust prompt resets every time you reload the plugin.
+## Usage
+
+### Opening files
+
+- Files with a supported extension open in ScriptVault automatically.
+- For `Dockerfile` / `Makefile`: ensure **"Detect all file extensions"** is on, then open normally.
+- Right-click any file or folder → **Open in ScriptVault** / **New script file…**
+- Command palette: **ScriptVault: Open current file**
+
+### Running scripts
+
+1. Open a runnable file (`.sh`, `.bash`, `.zsh`, `.fish`, `.ps1`).
+2. Click **▶ Run** in the header.
+3. Before running, ScriptVault saves the current editor contents to disk.
+4. On the first run of a given file per session, a confirmation modal lists the script path and interpreter.
+5. Output streams to the **Script Output** sidebar panel (stdout normal, stderr in red).
+
+### ShellCheck linting
+
+ShellCheck diagnostics appear inline in the gutter as you type (750 ms debounce). Hover a highlighted range to see the full message and SC code. Toggle off in settings if not needed.
+
+### chmod +x
+
+If a shell script is not executable, a **chmod +x** button appears in the header. Click it to grant execute permission without leaving Obsidian.
+
+### Security
+
+The **Run** feature executes arbitrary shell commands from files in your vault. Only run scripts you trust. Trust is remembered per file for the current plugin session only, and ScriptVault disables the run button when the chosen interpreter is not available on the machine.
+
+## Disclosures
+
+- Desktop-only plugin.
+- No accounts, API keys, or external services required.
+- No telemetry, analytics, ads, or network requests.
+- Can execute local scripts on your machine when you click **Run**.
+- Can read file metadata needed for absolute path copy, executable-bit checks, and launching local scripts.
+- Can modify local files when you edit them in the view, create new script files, or use **chmod +x**.
+
+---
 
 ## Commands
 
-- `ScriptVault: Open current file in ScriptVault` — force-open the active file in the ScriptVault view.
-- `ScriptVault: Show ScriptVault outline` — open the outline panel.
+| Command | Description |
+|---|---|
+| `ScriptVault: Open current file` | Force-open the active file in the ScriptVault editor |
+| `ScriptVault: Show outline` | Open the function outline sidebar |
 
-## Stack
+---
 
-- TypeScript (strict)
-- Obsidian API
-- CodeMirror 6 (core provided by Obsidian, language parsers from `@codemirror/legacy-modes`)
-- esbuild
+## Development
+
+```bash
+git clone https://github.com/jrudilla/obsidian-scriptvault.git
+cd obsidian-scriptvault
+npm install
+npm run dev          # watch mode — main.js rebuilt on every save
+npm run build        # production build (type-check + minify)
+npm run typecheck    # type-check only
+```
+
+Run `npm run build`, then copy `main.js`, `manifest.json`, and `styles.css` to your test vault's `.obsidian/plugins/scriptvault/` and reload the plugin.
+
+### Tech stack
+
+- **TypeScript 5** / strict mode
+- **CodeMirror 6** — `@codemirror/legacy-modes` for language parsers (bundled); `@codemirror/state` and `@codemirror/view` are external (provided by Obsidian)
+- **esbuild** — CJS output, tree-shaken, ~130 KB
+- **Obsidian API 1.4.16+**
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
 
 ## License
 
-MIT
+MIT © [jrudilla](https://github.com/jrudilla)

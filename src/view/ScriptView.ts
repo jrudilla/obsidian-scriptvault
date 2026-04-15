@@ -5,15 +5,30 @@ import { createEditor } from "./editorSetup";
 import { buildHeader, type HeaderHandle } from "./headerActions";
 import { detectLanguage, loadLanguageSupport, type LangId } from "../lang";
 import { envMaskExtension } from "../features/envMask";
-import { canRun, pickInterpreter, runScript } from "../features/runner";
+import {
+  canRun,
+  getScriptWorkingDirectory,
+  isInterpreterAvailable,
+  pickInterpreter,
+  runScript,
+} from "../features/runner";
 import { requireTrust } from "../features/runnerTrust";
-import { VIEW_TYPE_SCRIPT } from "../constants";
+import { makeShellCheckLinter } from "../features/shellcheck";
+import { getFilePermissions, makeExecutable } from "../features/permissions";
+import {
+  VIEW_TYPE_SCRIPT,
+  UNIX_CHMOD_EXTENSIONS,
+  SHELLCHECK_EXTENSIONS,
+  RUNNABLE_EXTENSIONS,
+} from "../constants";
+import { isDesktop } from "../util/platform";
 import type ScriptVaultPlugin from "../main";
 
 export class ScriptView extends TextFileView {
   private cm: EditorView | null = null;
   private langCompartment = new Compartment();
   private maskCompartment = new Compartment();
+  private lintCompartment = new Compartment();
   private headerEl!: HTMLElement;
   private editorEl!: HTMLElement;
   private header: HeaderHandle | null = null;
@@ -83,7 +98,10 @@ export class ScriptView extends TextFileView {
 
     this.applyLanguage(data);
     this.applyInitialMask();
+    this.applyLinter();
     this.rebuildHeader();
+    this.refreshPermissions();
+    this.refreshRunAvailability();
     this.plugin.notifyOutlineRefresh();
   }
 
@@ -105,9 +123,13 @@ export class ScriptView extends TextFileView {
       doc: data,
       langCompartment: this.langCompartment,
       maskCompartment: this.maskCompartment,
+      lintCompartment: this.lintCompartment,
       onChange: () => {
         this.requestSave();
         this.plugin.notifyOutlineRefresh();
+      },
+      onCursorMove: (line, col, totalLines) => {
+        this.header?.updateCursor(line, col, totalLines);
       },
     });
   }
@@ -141,10 +163,72 @@ export class ScriptView extends TextFileView {
     }
   }
 
+  private applyLinter(): void {
+    if (!this.cm) return;
+    // ShellCheck only supports sh/bash/dash/ksh — not fish, zsh, or ps1.
+    const shouldLint =
+      isDesktop() &&
+      this.plugin.settings.enableShellCheck &&
+      this.file != null &&
+      SHELLCHECK_EXTENSIONS.has(this.file.extension);
+
+    this.cm.dispatch({
+      effects: this.lintCompartment.reconfigure(
+        shouldLint
+          ? makeShellCheckLinter(
+              this.file!.extension,
+              this.plugin.settings.shellCheckPath || undefined,
+            )
+          : [],
+      ),
+    });
+  }
+
   private rebuildHeader(): void {
     this.header?.destroy();
     this.header = buildHeader(this.headerEl, this);
     this.header.setMaskActive(this.isMaskOn);
+  }
+
+  private refreshRunAvailability(): void {
+    if (!this.header || !this.file || !RUNNABLE_EXTENSIONS.has(this.file.extension)) return;
+
+    const firstLine = this.getViewData().split(/\r?\n/, 1)[0];
+    const interpreter = pickInterpreter(
+      this.getAbsPath() ?? this.file.path,
+      this.file.extension,
+      firstLine,
+      this.plugin.settings.runnerShell,
+    );
+
+    if (!isInterpreterAvailable(interpreter)) {
+      this.header.setRunEnabled(false, `Interpreter not found: ${interpreter[0]}`);
+      return;
+    }
+
+    this.header.setRunEnabled(true, `Execute with ${interpreter.join(" ")}`);
+  }
+
+  /** Read filesystem permissions and update the header chmod button. */
+  private refreshPermissions(): void {
+    if (!this.file) return;
+    const ext = this.file.extension;
+    if (!UNIX_CHMOD_EXTENSIONS.has(ext)) return;
+
+    const absPath = this.getAbsPath();
+    if (!absPath) return;
+
+    const perms = getFilePermissions(absPath);
+    this.header?.updateExecStatus(perms.executable, perms.canCheck);
+  }
+
+  /** Resolve the absolute path of the current file, or null if not available. */
+  private getAbsPath(): string | null {
+    if (!this.file) return null;
+    const adapter = this.app.vault.adapter;
+    const getFullPath = (adapter as { getFullPath?: (p: string) => string }).getFullPath;
+    if (typeof getFullPath !== "function") return null;
+    return getFullPath.call(adapter, this.file.path);
   }
 
   toggleMask(): void {
@@ -154,6 +238,21 @@ export class ScriptView extends TextFileView {
       effects: this.maskCompartment.reconfigure(this.isMaskOn ? envMaskExtension() : []),
     });
     this.header?.setMaskActive(this.isMaskOn);
+  }
+
+  makeExecutable(): void {
+    const absPath = this.getAbsPath();
+    if (!absPath) {
+      new Notice("Cannot resolve file path.");
+      return;
+    }
+    const ok = makeExecutable(absPath);
+    if (ok) {
+      new Notice("File is now executable (chmod +x).");
+      this.header?.updateExecStatus(true, true);
+    } else {
+      new Notice("Failed to set executable permission.");
+    }
   }
 
   showOutline(): void {
@@ -177,14 +276,11 @@ export class ScriptView extends TextFileView {
       return;
     }
 
-    const adapter = this.app.vault.adapter;
-    // Only the FileSystemAdapter exposes getFullPath; mobile uses CapacitorAdapter.
-    const getFullPath = (adapter as { getFullPath?: (path: string) => string }).getFullPath;
-    if (typeof getFullPath !== "function") {
+    const absPath = this.getAbsPath();
+    if (!absPath) {
       new Notice("Cannot resolve absolute path on this platform.");
       return;
     }
-    const absPath = getFullPath.call(adapter, this.file.path);
 
     const firstLine = this.getViewData().split(/\r?\n/, 1)[0];
     const interpreter = pickInterpreter(
@@ -193,6 +289,13 @@ export class ScriptView extends TextFileView {
       firstLine,
       this.plugin.settings.runnerShell,
     );
+    if (!isInterpreterAvailable(interpreter)) {
+      new Notice(`Interpreter not found: ${interpreter[0]}`);
+      this.refreshRunAvailability();
+      return;
+    }
+
+    await this.save();
 
     const allowed = await requireTrust(this.plugin, this.file.path, interpreter);
     if (!allowed) return;
@@ -206,7 +309,7 @@ export class ScriptView extends TextFileView {
     panel.startRun(this.file.name);
 
     try {
-      const cwd = absPath.substring(0, absPath.lastIndexOf("/")) || "/";
+      const cwd = getScriptWorkingDirectory(absPath);
       const result = await runScript(
         interpreter,
         cwd,
