@@ -3,8 +3,8 @@
   "name": "ScriptVault",
   "version": "0.1.0",
   "minAppVersion": "1.4.16",
-  "description": "Edit and run scripts, dotfiles, and developer config files in Obsidian.",
+  "description": "Edit and run scripts, dotfiles, and developer config files.",
   "author": "Juan Rudilla",
-  "authorUrl": "https://github.com/jrudilla/obsidian-scriptvault",
+  "authorUrl": "https://github.com/jrudilla",
   "isDesktopOnly": true
 }
