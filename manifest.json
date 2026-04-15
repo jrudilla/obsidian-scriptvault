@@ -1,7 +1,7 @@
 {
   "id": "scriptvault",
   "name": "ScriptVault",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "minAppVersion": "1.4.16",
   "description": "Edit and run scripts, dotfiles, and developer config files.",
   "author": "Juan Rudilla",

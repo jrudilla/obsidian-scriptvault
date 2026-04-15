@@ -8,6 +8,21 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-04-15
+
+### Changed
+- Fixed Obsidian marketplace validation issues reported by the review bot
+- Reworked async callbacks and promise handling for stricter lint compliance
+- Replaced forbidden `require()` usage with ESM imports
+- Updated command ids and metadata for marketplace compliance
+- Added local lint and release validation tooling to catch submission issues earlier
+
+## [0.1.1] — 2026-04-15
+
+### Changed
+- Shortened the plugin description to comply with marketplace validation
+- Updated `authorUrl` to point to the author profile instead of the plugin repository
+
 ## [0.1.0] — 2026-04-15
 
 ### Added
@@ -34,5 +49,7 @@ Versions follow [Semantic Versioning](https://semver.org/).
 - Light and dark theme support via Obsidian CSS variables
 - Desktop-only release target for marketplace compatibility
 
-[Unreleased]: https://github.com/jrudilla/obsidian-scriptvault/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/jrudilla/obsidian-scriptvault/compare/0.1.2...HEAD
+[0.1.2]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.2
+[0.1.1]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.1
 [0.1.0]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.0
