@@ -1,0 +1,10 @@
+{
+  "id": "scriptvault",
+  "name": "ScriptVault",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.16",
+  "description": "View and edit shell scripts, dotfiles, and developer config files with syntax highlighting.",
+  "author": "jrudilla",
+  "authorUrl": "https://github.com/jrudilla/obsidian-scriptvault",
+  "isDesktopOnly": false
+}

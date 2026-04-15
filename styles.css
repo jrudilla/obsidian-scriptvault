@@ -1,0 +1,177 @@
+.scriptvault-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.scriptvault-header {
+  display: flex;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.scriptvault-header button {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+
+.scriptvault-header-spacer {
+  flex: 1;
+}
+
+.scriptvault-header-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-monospace);
+}
+
+.scriptvault-editor {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+.scriptvault-editor .cm-editor {
+  height: 100%;
+}
+
+.scriptvault-editor .cm-scroller {
+  font-family: var(--font-monospace);
+}
+
+.scriptvault-masked {
+  background: var(--background-modifier-hover);
+  color: var(--text-faint);
+  border-radius: 3px;
+  padding: 0 4px;
+  font-family: var(--font-monospace);
+}
+
+.scriptvault-runner-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 8px;
+  gap: 6px;
+}
+
+.scriptvault-runner-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.scriptvault-runner-header-name {
+  font-family: var(--font-monospace);
+  color: var(--text-normal);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scriptvault-runner-status {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--background-modifier-hover);
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+.scriptvault-runner-status.running {
+  background: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.scriptvault-runner-status.success {
+  background: var(--color-green);
+  color: var(--text-on-accent);
+}
+
+.scriptvault-runner-status.error {
+  background: var(--color-red);
+  color: var(--text-on-accent);
+}
+
+.scriptvault-runner-output {
+  font-family: var(--font-monospace);
+  white-space: pre-wrap;
+  word-break: break-all;
+  flex: 1;
+  overflow: auto;
+  background: var(--background-secondary);
+  padding: 8px;
+  border-radius: 4px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.scriptvault-runner-stderr {
+  color: var(--text-error);
+}
+
+.scriptvault-outline-view {
+  padding: 8px 0;
+}
+
+.scriptvault-outline-empty {
+  padding: 8px 12px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.scriptvault-outline-item {
+  cursor: pointer;
+  padding: 4px 12px;
+  font-size: 13px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.scriptvault-outline-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.scriptvault-outline-icon {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: var(--font-monospace);
+  flex-shrink: 0;
+}
+
+.scriptvault-outline-name {
+  font-family: var(--font-monospace);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scriptvault-trust-modal-body {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.scriptvault-trust-modal-body code {
+  font-family: var(--font-monospace);
+  background: var(--background-secondary);
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: block;
+  margin: 6px 0;
+  word-break: break-all;
+}
+
+.scriptvault-trust-modal-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}

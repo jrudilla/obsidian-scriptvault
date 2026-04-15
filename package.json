@@ -1,0 +1,36 @@
+{
+  "name": "obsidian-scriptvault",
+  "version": "0.1.0",
+  "description": "View and edit shell scripts, dotfiles, and developer config files with syntax highlighting.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "typecheck": "tsc -noEmit -skipLibCheck"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "shell",
+    "dotfiles",
+    "codemirror",
+    "scripting"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@codemirror/commands": "^6.3.0",
+    "@codemirror/language": "^6.10.0",
+    "@codemirror/state": "^6.4.0",
+    "@codemirror/view": "^6.25.0",
+    "@lezer/highlight": "^1.2.0",
+    "@types/node": "^20.11.0",
+    "builtin-modules": "^3.3.0",
+    "esbuild": "^0.23.0",
+    "obsidian": "latest",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "@codemirror/legacy-modes": "^6.4.0"
+  }
+}
