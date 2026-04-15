@@ -1,6 +1,8 @@
 # ScriptVault
 
-An [Obsidian](https://obsidian.md) desktop plugin that lets you open, edit, and run shell scripts, dotfiles, and developer config files directly inside your vault, with syntax highlighting, a function outline, ShellCheck linting, and an integrated output panel.
+An [Obsidian](https://obsidian.md) desktop plugin for editing and running scripts, dotfiles, and developer config files without leaving your vault.
+
+Syntax highlighting, ShellCheck linting, an outline panel, a script runner, and starter templates are built in.
 
 ---
 
@@ -19,6 +21,17 @@ An [Obsidian](https://obsidian.md) desktop plugin that lets you open, edit, and 
 | **New script modal** | Create a new script with a template from the file explorer context menu |
 | **Copy path** | Copy the absolute file path to clipboard from the header |
 | **Line/column counter** | Live cursor position shown in the header |
+
+## Screenshots
+
+Editor view:
+![ScriptVault editor](assets/screenshots/editor-view.png)
+
+New script modal:
+![ScriptVault new script modal](assets/screenshots/new-script-modal.png)
+
+Inline error diagnostics:
+![ScriptVault error diagnostics](assets/screenshots/shellcheck-error.png)
 
 ---
 
@@ -169,4 +182,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT © [jrudilla](https://github.com/jrudilla)
+MIT © [Juan Rudilla](https://github.com/jrudilla)

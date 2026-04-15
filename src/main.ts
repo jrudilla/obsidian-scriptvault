@@ -140,7 +140,7 @@ export default class ScriptVaultPlugin extends Plugin {
     if (!isFilenameOnly(file.name)) return;
     if (this.reentryGuard.has(file)) return;
 
-    const leaf = this.app.workspace.activeLeaf;
+    const leaf = this.app.workspace.getMostRecentLeaf();
     if (!leaf) return;
     if (leaf.view.getViewType() === VIEW_TYPE_SCRIPT) return;
 

@@ -1,7 +1,7 @@
 {
   "name": "obsidian-scriptvault",
   "version": "0.1.0",
-  "description": "View and edit shell scripts, dotfiles, and developer config files with syntax highlighting.",
+  "description": "Edit and run scripts, dotfiles, and developer config files in Obsidian.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
