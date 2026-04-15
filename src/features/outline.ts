@@ -90,10 +90,12 @@ export class OutlineView extends ItemView {
     root.addClass("scriptvault-outline-view");
     this.listEl = root.createDiv();
     this.refresh();
+    await Promise.resolve();
   }
 
   async onClose(): Promise<void> {
     this.containerEl.empty();
+    await Promise.resolve();
   }
 
   refresh(): void {

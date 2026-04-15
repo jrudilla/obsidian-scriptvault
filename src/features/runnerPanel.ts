@@ -18,7 +18,7 @@ export class RunnerOutputView extends ItemView {
   }
 
   getDisplayText(): string {
-    return "Script Output";
+    return "Script output";
   }
 
   getIcon(): string {
@@ -44,10 +44,12 @@ export class RunnerOutputView extends ItemView {
     });
 
     this.outputEl = root.createEl("pre", { cls: "scriptvault-runner-output" });
+    await Promise.resolve();
   }
 
   async onClose(): Promise<void> {
     this.containerEl.empty();
+    await Promise.resolve();
   }
 
   startRun(scriptName: string): void {

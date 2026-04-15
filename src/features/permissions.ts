@@ -1,3 +1,4 @@
+import fs from "fs";
 import { isDesktop } from "../util/platform";
 
 export interface FilePermissions {
@@ -10,7 +11,6 @@ export function getFilePermissions(absPath: string): FilePermissions {
   if (process.platform === "win32") return { executable: true, canCheck: false };
 
   try {
-    const fs = require("fs") as typeof import("fs");
     const stat = fs.statSync(absPath);
     const executable = (stat.mode & 0o111) !== 0;
     return { executable, canCheck: true };
@@ -22,7 +22,6 @@ export function getFilePermissions(absPath: string): FilePermissions {
 export function makeExecutable(absPath: string): boolean {
   if (!isDesktop() || process.platform === "win32") return false;
   try {
-    const fs = require("fs") as typeof import("fs");
     const stat = fs.statSync(absPath);
     fs.chmodSync(absPath, stat.mode | 0o111);
     return true;

@@ -63,6 +63,7 @@ export class ScriptView extends TextFileView {
     root.addClass("scriptvault-view");
     this.headerEl = root.createDiv();
     this.editorEl = root.createDiv({ cls: "scriptvault-editor" });
+    await Promise.resolve();
   }
 
   async onClose(): Promise<void> {
@@ -74,6 +75,7 @@ export class ScriptView extends TextFileView {
     }
     this.editorBuilt = false;
     this.contentEl.empty();
+    await Promise.resolve();
   }
 
   getViewData(): string {
@@ -165,18 +167,19 @@ export class ScriptView extends TextFileView {
 
   private applyLinter(): void {
     if (!this.cm) return;
+    const file = this.file;
     // ShellCheck only supports sh/bash/dash/ksh — not fish, zsh, or ps1.
     const shouldLint =
       isDesktop() &&
       this.plugin.settings.enableShellCheck &&
-      this.file != null &&
-      SHELLCHECK_EXTENSIONS.has(this.file.extension);
+      file != null &&
+      SHELLCHECK_EXTENSIONS.has(file.extension);
 
     this.cm.dispatch({
       effects: this.lintCompartment.reconfigure(
         shouldLint
           ? makeShellCheckLinter(
-              this.file!.extension,
+              file.extension,
               this.plugin.settings.shellCheckPath || undefined,
             )
           : [],
@@ -256,7 +259,7 @@ export class ScriptView extends TextFileView {
   }
 
   showOutline(): void {
-    this.plugin.openOutlineView();
+    void this.plugin.openOutlineView();
   }
 
   revealLine(lineIndex: number): void {

@@ -36,7 +36,7 @@ export class NewScriptModal extends Modal {
     this.nameInput.disabled = !!this.selectedType.fixedName;
     this.nameInput.addEventListener("input", () => this.updatePreview());
     this.nameInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") this.create();
+      if (e.key === "Enter") void this.create();
     });
 
     // Type grid
@@ -74,7 +74,9 @@ export class NewScriptModal extends Modal {
     const cancelBtn = actions.createEl("button", { text: "Cancel" });
     cancelBtn.addEventListener("click", () => this.close());
     const createBtn = actions.createEl("button", { text: "Create", cls: "mod-cta" });
-    createBtn.addEventListener("click", () => this.create());
+    createBtn.addEventListener("click", () => {
+      void this.create();
+    });
 
     // Focus name field after open
     setTimeout(() => {

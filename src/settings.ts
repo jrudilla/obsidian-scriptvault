@@ -39,9 +39,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
         "Show inline ShellCheck diagnostics for shell scripts (.sh, .bash). Requires ShellCheck installed (brew install shellcheck). Desktop only.",
       )
       .addToggle((t) =>
-        t.setValue(this.plugin.settings.enableShellCheck).onChange(async (v) => {
+        t.setValue(this.plugin.settings.enableShellCheck).onChange((v) => {
           this.plugin.settings.enableShellCheck = v;
-          await this.plugin.saveSettings();
+          void this.plugin.saveSettings();
         }),
       );
 
@@ -54,9 +54,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
         t
           .setPlaceholder("/opt/homebrew/bin/shellcheck")
           .setValue(this.plugin.settings.shellCheckPath)
-          .onChange(async (v) => {
+          .onChange((v) => {
             this.plugin.settings.shellCheckPath = v.trim();
-            await this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           }),
       );
 
@@ -64,9 +64,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
       .setName("Mask .env values by default")
       .setDesc("Hide values after `=` in .env files until you click the toggle.")
       .addToggle((t) =>
-        t.setValue(this.plugin.settings.maskEnvByDefault).onChange(async (v) => {
+        t.setValue(this.plugin.settings.maskEnvByDefault).onChange((v) => {
           this.plugin.settings.maskEnvByDefault = v;
-          await this.plugin.saveSettings();
+          void this.plugin.saveSettings();
         }),
       );
 
@@ -78,9 +78,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
       .addToggle((t) =>
         t
           .setValue(this.plugin.settings.enableFilenameIntercept)
-          .onChange(async (v) => {
+          .onChange((v) => {
             this.plugin.settings.enableFilenameIntercept = v;
-            await this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           }),
       );
 
@@ -92,9 +92,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
       .addToggle((t) =>
         t
           .setValue(this.plugin.settings.runnerConfirmEverySession)
-          .onChange(async (v) => {
+          .onChange((v) => {
             this.plugin.settings.runnerConfirmEverySession = v;
-            await this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           }),
       );
 
@@ -107,9 +107,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
         t
           .setPlaceholder("/bin/bash")
           .setValue(this.plugin.settings.runnerShell)
-          .onChange(async (v) => {
+          .onChange((v) => {
             this.plugin.settings.runnerShell = v.trim();
-            await this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           }),
       );
 
@@ -119,11 +119,11 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
       .addText((t) =>
         t
           .setValue(String(this.plugin.settings.runnerTimeoutMs))
-          .onChange(async (v) => {
+          .onChange((v) => {
             const n = parseInt(v, 10);
             if (Number.isFinite(n) && n > 0) {
               this.plugin.settings.runnerTimeoutMs = n;
-              await this.plugin.saveSettings();
+              void this.plugin.saveSettings();
             }
           }),
       );

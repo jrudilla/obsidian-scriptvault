@@ -77,7 +77,9 @@ export function buildHeader(
   if (canRun() && RUNNABLE_EXTENSIONS.has(ext)) {
     runBtn = parent.createEl("button", { text: "▶ Run" });
     runBtn.title = "Execute this script";
-    runBtn.addEventListener("click", () => view.runScript());
+    runBtn.addEventListener("click", () => {
+      void view.runScript();
+    });
   }
 
   // Outline button

@@ -60,7 +60,9 @@ export default class ScriptVaultPlugin extends Plugin {
     }, 250);
 
     this.registerEvent(
-      this.app.workspace.on("file-open", (file) => this.handleFileOpen(file)),
+      this.app.workspace.on("file-open", (file) => {
+        void this.handleFileOpen(file);
+      }),
     );
 
     this.registerEvent(
@@ -71,7 +73,9 @@ export default class ScriptVaultPlugin extends Plugin {
             item
               .setTitle("Open in ScriptVault")
               .setIcon("file-code")
-              .onClick(() => this.openInScriptView(abstractFile));
+              .onClick(() => {
+                void this.openInScriptView(abstractFile);
+              });
           });
         }
         // "New script file…" — target the folder itself, or parent of a file
@@ -86,7 +90,9 @@ export default class ScriptVaultPlugin extends Plugin {
             item
               .setTitle("New script file…")
               .setIcon("file-plus")
-              .onClick(() => this.openNewScriptModal(folder));
+              .onClick(() => {
+                this.openNewScriptModal(folder);
+              });
           });
         }
       }),
@@ -94,13 +100,13 @@ export default class ScriptVaultPlugin extends Plugin {
 
 
     this.addCommand({
-      id: "open-current-in-scriptvault",
+      id: "open-current-file",
       name: "Open current file",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveFile();
         if (!file) return false;
         if (checking) return true;
-        this.openInScriptView(file);
+        void this.openInScriptView(file);
         return true;
       },
     });
@@ -108,7 +114,9 @@ export default class ScriptVaultPlugin extends Plugin {
     this.addCommand({
       id: "show-outline",
       name: "Show outline",
-      callback: () => this.openOutlineView(),
+      callback: () => {
+        void this.openOutlineView();
+      },
     });
 
     this.addSettingTab(new ScriptVaultSettingsTab(this.app, this));
@@ -118,7 +126,7 @@ export default class ScriptVaultPlugin extends Plugin {
     });
   }
 
-  async onunload(): Promise<void> {
+  onunload(): void {
     // Obsidian recommends NOT detaching leaves on unload — leaves persist
     // and reattach when the plugin loads again. Cleanup is automatic via
     // registerView/registerEvent. Leaving this hook empty intentionally.
@@ -187,7 +195,7 @@ export default class ScriptVaultPlugin extends Plugin {
   async openOutlineView(): Promise<void> {
     const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_OUTLINE);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]);
+      await this.app.workspace.revealLeaf(existing[0]);
       this.refreshOutline();
       return;
     }
@@ -197,14 +205,15 @@ export default class ScriptVaultPlugin extends Plugin {
       return;
     }
     await leaf.setViewState({ type: VIEW_TYPE_OUTLINE, active: true });
-    this.app.workspace.revealLeaf(leaf);
+    await this.app.workspace.revealLeaf(leaf);
   }
 
   getActiveScriptView(): ScriptView | null {
     const active = this.app.workspace.getActiveViewOfType(ScriptView);
     if (active) return active;
     const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_SCRIPT);
-    return (leaves[0]?.view as ScriptView) ?? null;
+    const firstView = leaves[0]?.view;
+    return firstView instanceof ScriptView ? firstView : null;
   }
 
   revealScriptLine(line: number): void {
@@ -217,13 +226,13 @@ export default class ScriptVaultPlugin extends Plugin {
   async openRunnerPanel(): Promise<RunnerOutputView | null> {
     const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_RUNNER);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]);
+      await this.app.workspace.revealLeaf(existing[0]);
       return existing[0].view as RunnerOutputView;
     }
     const leaf = this.app.workspace.getRightLeaf(false);
     if (!leaf) return null;
     await leaf.setViewState({ type: VIEW_TYPE_RUNNER, active: true });
-    this.app.workspace.revealLeaf(leaf);
+    await this.app.workspace.revealLeaf(leaf);
     return leaf.view as RunnerOutputView;
   }
 
@@ -251,7 +260,7 @@ export default class ScriptVaultPlugin extends Plugin {
         await this.openInScriptView(file);
       }
     });
-    modal.open();
+    void modal.open();
   }
 
   // Expose for tests / future use

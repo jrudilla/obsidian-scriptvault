@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "lint": "eslint src tests --ext .ts",
     "typecheck": "tsc -noEmit -skipLibCheck",
-    "test": "node --import tsx --test tests/**/*.test.ts"
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "validate:release": "node scripts/validate-release.mjs",
+    "check": "npm run lint && npm run typecheck && npm test && npm run validate:release"
   },
   "keywords": [
     "obsidian",
@@ -19,9 +22,15 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
     "builtin-modules": "^3.3.0",
     "esbuild": "^0.23.0",
+    "eslint": "^9.39.4",
+    "eslint-plugin-promise": "^7.2.1",
+    "globals": "^17.5.0",
     "obsidian": "latest",
     "tslib": "^2.6.2",
     "tsx": "^4.21.0",

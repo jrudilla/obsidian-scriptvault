@@ -1,3 +1,5 @@
+import { spawn } from "child_process";
+import fs from "fs";
 import { linter, lintGutter, type Diagnostic } from "@codemirror/lint";
 import type { Extension } from "@codemirror/state";
 import { commandExists } from "./runner";
@@ -45,7 +47,6 @@ export function resolveShellCheckPath(
 ): string | null {
   if (override) return override;
 
-  const fs = require("fs") as typeof import("fs");
   for (const candidate of candidates) {
     // For absolute paths, verify they exist and are executable.
     if (!candidate.startsWith("/")) {
@@ -100,13 +101,6 @@ export function makeShellCheckLinter(ext: string, pathOverride?: string): Extens
       if (!isDesktop()) return Promise.resolve([]);
 
       return new Promise<Diagnostic[]>((resolve) => {
-        let cp: typeof import("child_process");
-        try {
-          cp = require("child_process") as typeof import("child_process");
-        } catch {
-          return resolve([]);
-        }
-
         const binary = findShellCheck(pathOverride);
         if (!binary) return resolve([]); // not installed anywhere
 
@@ -117,9 +111,9 @@ export function makeShellCheckLinter(ext: string, pathOverride?: string): Extens
         if (!hasShebang) args.push(`--shell=${dialect}`);
         args.push("-");
 
-        let proc: ReturnType<typeof cp.spawn>;
+        let proc: ReturnType<typeof spawn>;
         try {
-          proc = cp.spawn(binary, args);
+          proc = spawn(binary, args);
         } catch {
           return resolve([]);
         }
@@ -178,8 +172,8 @@ export function makeShellCheckLinter(ext: string, pathOverride?: string): Extens
         });
 
         try {
-          proc.stdin!.write(content, "utf8");
-          proc.stdin!.end();
+          proc.stdin.write(content, "utf8");
+          proc.stdin.end();
         } catch {
           done([]);
         }

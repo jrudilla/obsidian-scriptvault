@@ -1,3 +1,5 @@
+import { spawn } from "child_process";
+import fs from "fs";
 import path from "path";
 import { isDesktop } from "../util/platform";
 
@@ -99,7 +101,6 @@ function isWindowsPath(input: string): boolean {
 
 function canAccessExecutable(candidate: string): boolean {
   try {
-    const fs = require("fs") as typeof import("fs");
     if (process.platform === "win32") {
       fs.accessSync(candidate, fs.constants.F_OK);
     } else {
@@ -191,14 +192,12 @@ export async function runScript(
     throw new Error("Script execution is only available on desktop.");
   }
 
-  const cp = require("child_process") as typeof import("child_process");
-
   return new Promise<RunResult>((resolve) => {
     const [cmd, ...args] = interpreter;
     let killed = false;
     let settled = false;
 
-    const proc = cp.spawn(cmd, args, { cwd });
+    const proc = spawn(cmd, args, { cwd });
 
     const timer = setTimeout(() => {
       killed = true;
