@@ -71,9 +71,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("Intercept filename-only files")
+      .setName("Open extensionless files automatically")
       .setDesc(
-        "Open supported extensionless files in the script editor automatically. Requires Obsidian setting 'Files & Links → Detect all file extensions' to be enabled.",
+        "Open supported files without an extension in the script editor automatically. Requires extension detection to be enabled in settings.",
       )
       .addToggle((t) =>
         t
