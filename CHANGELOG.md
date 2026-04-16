@@ -8,6 +8,13 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-04-16
+
+### Changed
+- Normalized visible UI text to sentence case for marketplace review compliance
+- Switched platform detection back to the Obsidian Platform API
+- Continued release-quality cleanup for validator and reviewer feedback
+
 ## [0.1.2] — 2026-04-15
 
 ### Changed
@@ -49,7 +56,8 @@ Versions follow [Semantic Versioning](https://semver.org/).
 - Light and dark theme support via Obsidian CSS variables
 - Desktop-only release target for marketplace compatibility
 
-[Unreleased]: https://github.com/jrudilla/obsidian-scriptvault/compare/0.1.2...HEAD
+[Unreleased]: https://github.com/jrudilla/obsidian-scriptvault/compare/0.1.3...HEAD
+[0.1.3]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.3
 [0.1.2]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.2
 [0.1.1]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.1
 [0.1.0]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.0
