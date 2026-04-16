@@ -73,7 +73,7 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("Intercept filename-only files")
       .setDesc(
-        "Open dockerfile, makefile, and similar files in the script editor automatically. Requires Obsidian setting 'Files & Links → Detect all file extensions' to be enabled.",
+        "Open extensionless files such as Dockerfile and Makefile in the script editor automatically. Requires Obsidian setting 'Files & Links → Detect all file extensions' to be enabled.",
       )
       .addToggle((t) =>
         t

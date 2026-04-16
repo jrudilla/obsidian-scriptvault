@@ -245,7 +245,7 @@ export default class ScriptVaultPlugin extends Plugin {
     const showAll = vaultAny.getConfig?.("showUnsupportedFiles");
     if (showAll === false) {
       new Notice(
-        "Enable 'Files & Links → Detect all file extensions' in Obsidian settings to open dockerfile, makefile, and other extensionless files.",
+        "Enable 'Files & Links → Detect all file extensions' in Obsidian settings to open extensionless files such as Dockerfile and Makefile.",
         8000,
       );
     }

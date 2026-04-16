@@ -75,7 +75,7 @@ export function buildHeader(
   // Run button (desktop only, runnable extensions only)
   let runBtn: HTMLButtonElement | null = null;
   if (canRun() && RUNNABLE_EXTENSIONS.has(ext)) {
-    runBtn = parent.createEl("button", { text: "▶ Run" });
+    runBtn = parent.createEl("button", { text: "Run" });
     runBtn.title = "Execute this script";
     runBtn.addEventListener("click", () => {
       void view.runScript();
