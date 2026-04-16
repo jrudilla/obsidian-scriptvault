@@ -1,4 +1,12 @@
+import { createRequire } from "module";
+
+const require = createRequire(typeof __filename === "string" ? __filename : process.cwd());
+
 export function isDesktop(): boolean {
-  if (typeof navigator === "undefined") return false;
-  return !/Android|iPhone|iPad/i.test(navigator.userAgent);
+  try {
+    const { Platform } = require("obsidian") as typeof import("obsidian");
+    return Platform.isDesktopApp && !Platform.isMobile;
+  } catch {
+    return false;
+  }
 }

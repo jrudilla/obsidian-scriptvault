@@ -31,7 +31,7 @@ export class NewScriptModal extends Modal {
     const nameRow = contentEl.createDiv({ cls: "scriptvault-new-row" });
     nameRow.createEl("label", { text: "Name" });
     this.nameInput = nameRow.createEl("input", { type: "text" });
-    this.nameInput.placeholder = "my-script";
+    this.nameInput.placeholder = "My script";
     this.nameInput.value = this.selectedType.fixedName ?? "";
     this.nameInput.disabled = !!this.selectedType.fixedName;
     this.nameInput.addEventListener("input", () => this.updatePreview());

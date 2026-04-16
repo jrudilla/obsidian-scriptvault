@@ -65,10 +65,10 @@ export function buildHeader(
   const showChmod = isDesktop() && process.platform !== "win32" && UNIX_CHMOD_EXTENSIONS.has(ext);
   if (showChmod) {
     chmodBtn = parent.createEl("button", {
-      text: "chmod +x",
+      text: "Make executable",
       cls: "scriptvault-hidden", // hidden until updateExecStatus resolves
     });
-    chmodBtn.title = "Make this file executable (chmod +x)";
+    chmodBtn.title = "Make this file executable";
     chmodBtn.addEventListener("click", () => view.makeExecutable());
   }
 
@@ -83,14 +83,14 @@ export function buildHeader(
   }
 
   // Outline button
-  const outlineBtn = parent.createEl("button", { text: "Outline" });
-  outlineBtn.title = "Open function outline";
+  const outlineBtn = parent.createEl("button", { text: "Show outline" });
+  outlineBtn.title = "Show function outline";
   outlineBtn.addEventListener("click", () => view.showOutline());
   void outlineBtn;
 
   // Cursor / line counter
   const cursorEl = parent.createSpan({ cls: "scriptvault-header-cursor" });
-  cursorEl.setText("Ln 1, Col 1");
+  cursorEl.setText("Line 1, column 1");
 
   return {
     setMaskActive(active: boolean): void {
@@ -102,7 +102,7 @@ export function buildHeader(
       runBtn.title = title ?? "Execute this script";
     },
     updateCursor(line: number, col: number, totalLines: number): void {
-      cursorEl.setText(`Ln ${line}, Col ${col}  ·  ${totalLines} lines`);
+      cursorEl.setText(`Line ${line}, column ${col}  ·  ${totalLines} lines`);
     },
     updateExecStatus(executable: boolean, canCheck: boolean): void {
       if (!chmodBtn) return;

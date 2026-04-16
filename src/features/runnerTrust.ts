@@ -33,7 +33,7 @@ class RunnerTrustModal extends Modal {
 
     const body = contentEl.createDiv({ cls: "scriptvault-trust-modal-body" });
     body.createEl("p", {
-      text: "ScriptVault is about to execute the following script on your machine. Only run scripts you trust.",
+      text: "This plugin is about to execute the following script on your machine. Only run scripts that you trust.",
     });
 
     body.createEl("strong", { text: "Script:" });
@@ -42,7 +42,7 @@ class RunnerTrustModal extends Modal {
     body.createEl("strong", { text: "Interpreter:" });
     body.createEl("code", { text: this.interpreter.join(" ") });
     body.createEl("p", {
-      text: "Trust applies only to this file path for the rest of the current plugin session.",
+      text: "Trust applies only to this file path for the rest of this plugin session.",
     });
 
     const buttons = contentEl.createDiv({ cls: "scriptvault-trust-modal-buttons" });

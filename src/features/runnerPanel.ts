@@ -36,7 +36,7 @@ export class RunnerOutputView extends ItemView {
       text: "No script run yet",
     });
     this.statusEl = header.createDiv({ cls: "scriptvault-runner-status" });
-    this.statusEl.setText("idle");
+    this.statusEl.setText("Idle");
 
     const clearBtn = header.createEl("button", { text: "Clear" });
     clearBtn.addEventListener("click", () => {
@@ -69,21 +69,29 @@ export class RunnerOutputView extends ItemView {
   finishRun(exitCode: number | null, killed: boolean): void {
     if (killed) {
       this.setStatus("error");
-      this.statusEl.setText("killed");
+      this.statusEl.setText("Terminated");
       return;
     }
     if (exitCode === 0) {
       this.setStatus("success");
-      this.statusEl.setText("exit 0");
+      this.statusEl.setText("Succeeded");
       return;
     }
     this.setStatus("error");
-    this.statusEl.setText(`exit ${exitCode ?? "?"}`);
+    this.statusEl.setText(`Exited with code ${exitCode ?? "?"}`);
   }
 
   private setStatus(status: Status): void {
     this.statusEl.removeClass("running", "success", "error");
     if (status !== "idle") this.statusEl.addClass(status);
-    this.statusEl.setText(status);
+    this.statusEl.setText(
+      status === "idle"
+        ? "Idle"
+        : status === "running"
+          ? "Running"
+          : status === "success"
+            ? "Succeeded"
+            : "Failed",
+    );
   }
 }

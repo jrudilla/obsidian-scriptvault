@@ -34,9 +34,9 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName("Enable ShellCheck linting")
+      .setName("Enable shellcheck linting")
       .setDesc(
-        "Show inline ShellCheck diagnostics for shell scripts (.sh, .bash). Requires ShellCheck installed (brew install shellcheck). Desktop only.",
+        "Show inline shellcheck diagnostics for shell scripts (.sh, .bash). Requires shellcheck to be installed (brew install shellcheck). Desktop only.",
       )
       .addToggle((t) =>
         t.setValue(this.plugin.settings.enableShellCheck).onChange((v) => {
@@ -46,7 +46,7 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName("ShellCheck path")
+      .setName("Shellcheck path")
       .setDesc(
         "Absolute path to the shellcheck binary. Leave empty to auto-detect (/opt/homebrew/bin, /usr/local/bin, /usr/bin).",
       )
@@ -73,7 +73,7 @@ export class ScriptVaultSettingsTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("Intercept filename-only files")
       .setDesc(
-        "Open Dockerfile, Makefile, etc. in ScriptVault automatically. Requires Obsidian setting 'Files & Links → Detect all file extensions' to be enabled.",
+        "Open dockerfile, makefile, and similar files in the script editor automatically. Requires Obsidian setting 'Files & Links → Detect all file extensions' to be enabled.",
       )
       .addToggle((t) =>
         t

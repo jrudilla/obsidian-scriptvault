@@ -77,7 +77,7 @@ export class OutlineView extends ItemView {
   }
 
   getDisplayText(): string {
-    return "ScriptVault outline";
+    return "Script outline";
   }
 
   getIcon(): string {

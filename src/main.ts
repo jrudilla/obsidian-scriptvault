@@ -67,11 +67,11 @@ export default class ScriptVaultPlugin extends Plugin {
 
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu: Menu, abstractFile) => {
-        // "Open in ScriptVault" for supported files
+        // "Open in script editor" for supported files
         if (abstractFile instanceof TFile && this.shouldOfferOpen(abstractFile)) {
           menu.addItem((item: MenuItem) => {
             item
-              .setTitle("Open in ScriptVault")
+              .setTitle("Open in script editor")
               .setIcon("file-code")
               .onClick(() => {
                 void this.openInScriptView(abstractFile);
@@ -245,7 +245,7 @@ export default class ScriptVaultPlugin extends Plugin {
     const showAll = vaultAny.getConfig?.("showUnsupportedFiles");
     if (showAll === false) {
       new Notice(
-        "ScriptVault: enable 'Files & Links → Detect all file extensions' in Obsidian settings to open Dockerfile / Makefile and other extensionless files.",
+        "Enable 'Files & Links → Detect all file extensions' in Obsidian settings to open dockerfile, makefile, and other extensionless files.",
         8000,
       );
     }

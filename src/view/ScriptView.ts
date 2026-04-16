@@ -251,7 +251,7 @@ export class ScriptView extends TextFileView {
     }
     const ok = makeExecutable(absPath);
     if (ok) {
-      new Notice("File is now executable (chmod +x).");
+      new Notice("File is now executable.");
       this.header?.updateExecStatus(true, true);
     } else {
       new Notice("Failed to set executable permission.");
