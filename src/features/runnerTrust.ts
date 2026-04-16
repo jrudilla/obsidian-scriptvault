@@ -42,7 +42,7 @@ class RunnerTrustModal extends Modal {
     body.createEl("strong", { text: "Interpreter:" });
     body.createEl("code", { text: this.interpreter.join(" ") });
     body.createEl("p", {
-      text: "This trust decision applies only to this file path for the rest of the current session.",
+      text: "This trust decision only applies to this file path during the current session.",
     });
 
     const buttons = contentEl.createDiv({ cls: "scriptvault-trust-modal-buttons" });
