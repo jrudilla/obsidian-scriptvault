@@ -8,6 +8,13 @@ Versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.5] — 2026-04-17
+
+### Changed
+- Finalized marketplace validation fixes accepted by the Obsidian review bot
+- Simplified remaining UI copy around extension detection and extensionless file handling
+- Published a clean release version aligned with the current validated code state
+
 ## [0.1.4] — 2026-04-16
 
 ### Changed
@@ -63,7 +70,8 @@ Versions follow [Semantic Versioning](https://semver.org/).
 - Light and dark theme support via Obsidian CSS variables
 - Desktop-only release target for marketplace compatibility
 
-[Unreleased]: https://github.com/jrudilla/obsidian-scriptvault/compare/0.1.4...HEAD
+[Unreleased]: https://github.com/jrudilla/obsidian-scriptvault/compare/0.1.5...HEAD
+[0.1.5]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.5
 [0.1.4]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.4
 [0.1.3]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.3
 [0.1.2]: https://github.com/jrudilla/obsidian-scriptvault/releases/tag/0.1.2
